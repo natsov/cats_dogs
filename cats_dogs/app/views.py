@@ -38,7 +38,7 @@ class ImageClassifier:
         except Exception as e:
             raise ValueError("Ошибка обработки изображения: " + str(e))
 
-classifier = ImageClassifier('D:/model.pth')
+classifier = ImageClassifier('models/model.pth')
 
 class ClassifyView(View):
     @method_decorator(csrf_exempt)

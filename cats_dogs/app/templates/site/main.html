@@ -22,7 +22,7 @@
               <img id="uploadedImage" src="" alt="Uploaded Image" class="img-fluid" />
           </div>
 
-          <div id="result" class="mt-4"></div> <!-- Место для отображения результата -->
+          <div id="result" class="mt-4"></div>
       </div>
   </div>
 
@@ -44,7 +44,7 @@
             method: 'POST',
             body: formData,
             headers: {
-                'X-CSRFToken': getCookie('csrftoken') // Добавляем CSRF-токен
+                'X-CSRFToken': getCookie('csrftoken')
             }
         })
         .then(response => response.json())
@@ -64,7 +64,7 @@
     function resetForm() {
         document.getElementById('uploadInput').value = '';
         document.getElementById('result').innerHTML = '';
-        document.getElementById('uploadedImageContainer').style.display = 'none'; // Скрываем изображение
+        document.getElementById('uploadedImageContainer').style.display = 'none';
     }
 
     function getCookie(name) {

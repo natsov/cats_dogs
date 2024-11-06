@@ -17,7 +17,6 @@ class ImageClassifier:
         try:
             self.model.load_state_dict(torch.load(model_path, map_location=torch.device('cpu')))
             self.model.eval()
-            print("Модель загружена успешно.")
         except RuntimeError as e:
             print(f"Ошибка загрузки модели: {e}")
 
@@ -39,7 +38,6 @@ class ImageClassifier:
         except Exception as e:
             raise ValueError("Ошибка обработки изображения: " + str(e))
 
-# Инициализация классификатора
 classifier = ImageClassifier('D:/model.pth')
 
 class ClassifyView(View):

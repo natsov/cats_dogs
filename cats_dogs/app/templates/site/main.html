@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cats&Dogs</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+  <div class="px-4 py-5 my-5 text-center">
+      <h1 class="display-5 fw-bold text-body-emphasis">Cat or Dog</h1>
+      <div class="col-lg-6 mx-auto">
+          <p class="lead mb-4">Welcome to app that quickly identifies whether your uploaded image is a cat or a dog!</p>
+          <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+              <button type="button" class="btn btn-primary btn-lg px-4 gap-3" onclick="document.getElementById('uploadInput').click();">Загрузить изображение</button>
+              <button type="button" class="btn btn-outline-secondary btn-lg px-4" onclick="resetForm();">Сбросить</button>
+          </div>
+
+          <input type="file" id="uploadInput" style="display: none;" accept="image/*" onchange="handleFileUpload(event)">
+
+          <div id="uploadedImageContainer" class="mt-4" style="display: none;">
+              <img id="uploadedImage" src="" alt="Uploaded Image" class="img-fluid" />
+          </div>
+
+          <div id="result" class="mt-4"></div> <!-- Место для отображения результата -->
+      </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
+  <script>
+    function handleFileUpload(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+
+        const formData = new FormData();
+        formData.append('image', file);
+
+        const uploadedImage = document.getElementById('uploadedImage');
+        uploadedImage.src = URL.createObjectURL(file);
+        document.getElementById('uploadedImageContainer').style.display = 'block';
+
+        fetch('/classifier/classify/', {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-CSRFToken': getCookie('csrftoken') // Добавляем CSRF-токен
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            const resultDiv = document.getElementById('result');
+            if (data.label) {
+                resultDiv.innerHTML = `<h2 class="text-success">Это ${data.label}!</h2>`;
+            } else if (data.error) {
+                resultDiv.innerHTML = `<h2 class="text-danger">Ошибка: ${data.error}</h2>`;
+            }
+        })
+        .catch(error => {
+            console.error('Ошибка:', error);
+        });
+    }
+
+    function resetForm() {
+        document.getElementById('uploadInput').value = '';
+        document.getElementById('result').innerHTML = '';
+        document.getElementById('uploadedImageContainer').style.display = 'none'; // Скрываем изображение
+    }
+
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+  </script>
+</body>
+</html>

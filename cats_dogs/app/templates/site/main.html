@@ -10,10 +10,10 @@
   <div class="px-4 py-5 my-5 text-center">
       <h1 class="display-5 fw-bold text-body-emphasis">Cat or Dog</h1>
       <div class="col-lg-6 mx-auto">
-          <p class="lead mb-4">Welcome to app that quickly identifies whether your uploaded image is a cat or a dog!</p>
+          <p class="lead mb-4">Welcome to the app that quickly identifies whether your uploaded image is a cat or a dog!</p>
           <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
-              <button type="button" class="btn btn-primary btn-lg px-4 gap-3" onclick="document.getElementById('uploadInput').click();">Загрузить изображение</button>
-              <button type="button" class="btn btn-outline-secondary btn-lg px-4" onclick="resetForm();">Сбросить</button>
+              <button type="button" class="btn btn-primary btn-lg px-4 gap-3" onclick="document.getElementById('uploadInput').click();">Upload Image</button>
+              <button type="button" class="btn btn-outline-secondary btn-lg px-4" onclick="resetForm();">Reset</button>
           </div>
 
           <input type="file" id="uploadInput" style="display: none;" accept="image/*" onchange="handleFileUpload(event)">
@@ -51,13 +51,13 @@
         .then(data => {
             const resultDiv = document.getElementById('result');
             if (data.label) {
-                resultDiv.innerHTML = `<h2 class="text-success">Это ${data.label}!</h2>`;
+                resultDiv.innerHTML = `<h2 class="text-success">It's a ${data.label}!</h2>`;
             } else if (data.error) {
-                resultDiv.innerHTML = `<h2 class="text-danger">Ошибка: ${data.error}</h2>`;
+                resultDiv.innerHTML = `<h2 class="text-danger">Error: ${data.error}</h2>`;
             }
         })
         .catch(error => {
-            console.error('Ошибка:', error);
+            console.error('Error:', error);
         });
     }
 

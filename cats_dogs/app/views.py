@@ -1,3 +1,4 @@
+import os
 import torch
 from django.utils.decorators import method_decorator
 from torchvision import models, transforms
@@ -18,7 +19,7 @@ class ImageClassifier:
             self.model.load_state_dict(torch.load(model_path, map_location=torch.device('cpu')))
             self.model.eval()
         except RuntimeError as e:
-            print(f"Ошибка загрузки модели: {e}")
+            print(f"Model loading error: {e}")
 
         self.transform = transforms.Compose([
             transforms.Resize((224, 224)),
@@ -33,12 +34,12 @@ class ImageClassifier:
             with torch.no_grad():
                 output = self.model(image)
                 _, predicted = torch.max(output, 1)
-                label = 'Сat' if predicted.item() == 0 else 'Dog'
+                label = 'Cat' if predicted.item() == 0 else 'Dog'
             return label
         except Exception as e:
-            raise ValueError("Ошибка обработки изображения: " + str(e))
+            raise ValueError("Image processing error: " + str(e))
 
-classifier = ImageClassifier('models/model.pth')
+classifier = ImageClassifier(os.getenv('MODEL_PATH'))
 
 class ClassifyView(View):
     @method_decorator(csrf_exempt)
